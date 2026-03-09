@@ -1,0 +1,68 @@
+:root {
+	--bg: #0c0a09;
+	--bg-subtle: #1a1714;
+	--paper: #f5f0e8;
+	--paper-dark: #e8e0d2;
+	--red: #dc2626;
+	--red-dim: rgba(220, 38, 38, 0.15);
+	--amber: #f59e0b;
+	--amber-dim: rgba(245, 158, 11, 0.15);
+	--green: #22c55e;
+	--green-dim: rgba(34, 197, 94, 0.15);
+	--text: #e7e0d5;
+	--text-bright: #faf8f5;
+	--muted: #78716c;
+	--faint: #44403c;
+	--border: rgba(255, 255, 255, 0.08);
+
+	--font-serif: 'Fraunces', Georgia, serif;
+	--font-sans: 'Sora', system-ui, sans-serif;
+	--font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+
+	--col: 800px;
+	--pad: 32px;
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	scroll-behavior: smooth;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+	font-family: var(--font-sans);
+	font-size: 16px;
+	line-height: 1.6;
+	color: var(--text);
+	background: var(--bg);
+	overflow-x: hidden;
+}
+
+a {
+	color: var(--amber);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	text-decoration-thickness: 1px;
+	transition: color 0.15s;
+}
+
+a:hover {
+	color: var(--text-bright);
+}
+
+::selection {
+	background: var(--red);
+	color: var(--text-bright);
+}
+
+@media (max-width: 680px) {
+	:root {
+		--pad: 20px;
+	}
+}
