@@ -1,25 +1,32 @@
 :root {
-	--bg: #0c0a09;
-	--bg-subtle: #1a1714;
+	/* Paper-first palette */
 	--paper: #f5f0e8;
+	--paper-light: #faf8f4;
 	--paper-dark: #e8e0d2;
-	--red: #dc2626;
-	--red-dim: rgba(220, 38, 38, 0.15);
-	--amber: #f59e0b;
-	--amber-dim: rgba(245, 158, 11, 0.15);
-	--green: #22c55e;
-	--green-dim: rgba(34, 197, 94, 0.15);
-	--text: #e7e0d5;
-	--text-bright: #faf8f5;
-	--muted: #78716c;
-	--faint: #44403c;
-	--border: rgba(255, 255, 255, 0.08);
+	--paper-border: #d6cfc4;
+
+	--ink: #1e1a15;
+	--ink-light: #44403c;
+	--ink-muted: #78716c;
+	--ink-faint: #a8a29e;
+
+	--stamp-red: #b91c1c;
+	--stamp-red-light: rgba(185, 28, 28, 0.08);
+	--highlight: #92400e;
+	--highlight-bg: rgba(180, 83, 9, 0.08);
+	--green: #166534;
+	--green-bg: rgba(22, 101, 52, 0.08);
+
+	/* Terminal (dark inset) */
+	--terminal-bg: #13131a;
+	--terminal-text: #d0cbc2;
+	--terminal-muted: #4a4a5a;
 
 	--font-serif: 'Fraunces', Georgia, serif;
 	--font-sans: 'Sora', system-ui, sans-serif;
 	--font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
 
-	--col: 800px;
+	--col: 780px;
 	--pad: 32px;
 }
 
@@ -39,13 +46,13 @@ body {
 	font-family: var(--font-sans);
 	font-size: 16px;
 	line-height: 1.6;
-	color: var(--text);
-	background: var(--bg);
+	color: var(--ink);
+	background: var(--paper);
 	overflow-x: hidden;
 }
 
 a {
-	color: var(--amber);
+	color: var(--highlight);
 	text-decoration: underline;
 	text-underline-offset: 3px;
 	text-decoration-thickness: 1px;
@@ -53,16 +60,60 @@ a {
 }
 
 a:hover {
-	color: var(--text-bright);
+	color: var(--ink);
 }
 
 ::selection {
-	background: var(--red);
-	color: var(--text-bright);
+	background: var(--stamp-red);
+	color: white;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
 }
 
 @media (max-width: 680px) {
 	:root {
 		--pad: 20px;
+	}
+}
+
+/* ── Intro sequence: first-visit typing phase ── */
+/* Hide everything after the hero while typing plays */
+:root.intro-typing .hero ~ * {
+	opacity: 0;
+	filter: blur(8px);
+	transform: translateY(12px);
+	pointer-events: none;
+}
+
+/* ── Intro sequence: reveal phase ── */
+/* Animate sections in with staggered blur-to-clear */
+:root.intro-reveal .hero ~ * {
+	animation: section-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+:root.intro-reveal .hero ~ *:nth-child(3) { animation-delay: 0ms; }
+:root.intro-reveal .hero ~ *:nth-child(4) { animation-delay: 80ms; }
+:root.intro-reveal .hero ~ *:nth-child(5) { animation-delay: 160ms; }
+:root.intro-reveal .hero ~ *:nth-child(6) { animation-delay: 240ms; }
+:root.intro-reveal .hero ~ *:nth-child(7) { animation-delay: 320ms; }
+:root.intro-reveal .hero ~ *:nth-child(8) { animation-delay: 400ms; }
+:root.intro-reveal .hero ~ *:nth-child(9) { animation-delay: 480ms; }
+
+@keyframes section-reveal {
+	from {
+		opacity: 0;
+		filter: blur(8px);
+		transform: translateY(12px);
+	}
+	to {
+		opacity: 1;
+		filter: blur(0);
+		transform: translateY(0);
 	}
 }

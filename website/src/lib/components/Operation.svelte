@@ -2,69 +2,138 @@
 	import { onMount } from 'svelte';
 
 	let visible = $state(false);
-	let activeStep = $state(-1);
+	let progress = $state(0);
 	let el: HTMLElement;
+	let pathEl: SVGPathElement;
+	let pathLength = $state(0);
 
-	const steps = [
-		{ num: '01', title: 'Install', desc: 'Add the skill to your project with a single command.', icon: '📦' },
-		{ num: '02', title: 'Scan', desc: 'Analyzes your auth system, dev credentials, and environment.', icon: '🔍' },
-		{ num: '03', title: 'Create', desc: 'Builds dev-only login endpoints and token scripts for your stack.', icon: '🔧' },
-		{ num: '04', title: 'Detect', desc: 'Finds your browser automation tools — Playwright, Puppeteer, Chrome, etc.', icon: '🎯' },
-		{ num: '05', title: 'Document', desc: 'Updates CLAUDE.md, AGENTS.md, and other agent instructions.', icon: '📝' },
-		{ num: '06', title: 'Report', desc: 'Shows you everything it created with copy-paste commands.', icon: '📊' },
-		{ num: '07', title: 'Self-destruct', desc: 'Removes itself from your project. No trace left behind.', icon: '💥' },
+	const waypoints = [
+		{ title: 'Install', desc: 'Add the skill' },
+		{ title: 'Scan', desc: 'Analyze auth' },
+		{ title: 'Create', desc: 'Build shortcuts' },
+		{ title: 'Detect', desc: 'Find browsers' },
+		{ title: 'Document', desc: 'Update agents' },
+		{ title: 'Report', desc: 'Summarize' },
+		{ title: 'Self-destruct', desc: 'Remove traces' },
+	];
+
+	// Waypoint positions (matching SVG path at key points)
+	const positions = [
+		{ x: 80, y: 50 },
+		{ x: 310, y: 50 },
+		{ x: 540, y: 50 },
+		{ x: 540, y: 180 },
+		{ x: 310, y: 180 },
+		{ x: 80, y: 180 },
+		{ x: 80, y: 310 },
 	];
 
 	onMount(() => {
+		if (pathEl) {
+			pathLength = pathEl.getTotalLength();
+		}
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
 				if (entry.isIntersecting) {
 					visible = true;
 					observer.disconnect();
-					steps.forEach((_, i) => {
-						setTimeout(() => {
-							activeStep = i;
-						}, 200 + i * 150);
-					});
+					animatePath();
 				}
 			},
-			{ threshold: 0.1 }
+			{ threshold: 0.15 }
 		);
 		observer.observe(el);
 		return () => observer.disconnect();
 	});
+
+	function animatePath() {
+		const duration = 2400;
+		const start = performance.now();
+
+		function tick(now: number) {
+			const elapsed = now - start;
+			progress = Math.min(elapsed / duration, 1);
+			if (progress < 1) {
+				requestAnimationFrame(tick);
+			}
+		}
+		requestAnimationFrame(tick);
+	}
+
+	// Which waypoints are "reached" based on progress
+	function isReached(index: number): boolean {
+		return progress > index / (waypoints.length - 1) * 0.85;
+	}
 </script>
 
 <section class="operation" bind:this={el}>
 	<div class="inner">
-		<h2 class:visible>The Operation</h2>
-		<p class="lead" class:visible>Seven phases. One command. Zero traces.</p>
+		<div class="section-line"></div>
+		<div class="exhibit">OPERATION BRIEFING</div>
+		<h2 class:visible>Mission Route</h2>
 
-		<div class="timeline">
-			{#each steps as step, i}
-				<div class="step" class:active={i <= activeStep} class:burn={i === 6 && i <= activeStep}>
-					<div class="step-line">
-						<div class="dot">{step.icon}</div>
-						{#if i < steps.length - 1}
-							<div class="connector" class:burn-line={i === 5 && activeStep >= 6}></div>
-						{/if}
+		<div class="map" class:visible>
+			<svg viewBox="0 0 620 360" preserveAspectRatio="xMidYMid meet">
+				<!-- Background path (full route, faint) -->
+				<path
+					class="route-bg"
+					d="M 80,50 H 540 Q 590,50 590,100 V 130 Q 590,180 540,180 H 80 Q 30,180 30,230 V 260 Q 30,310 80,310"
+					fill="none"
+				/>
+				<!-- Animated path (draws on scroll) -->
+				<path
+					bind:this={pathEl}
+					class="route-line"
+					d="M 80,50 H 540 Q 590,50 590,100 V 130 Q 590,180 540,180 H 80 Q 30,180 30,230 V 260 Q 30,310 80,310"
+					fill="none"
+					style:stroke-dasharray={pathLength}
+					style:stroke-dashoffset={pathLength * (1 - progress)}
+				/>
+
+				<!-- Waypoint circles -->
+				{#each positions as pos, i}
+					<circle
+						cx={pos.x}
+						cy={pos.y}
+						r={i === 6 ? 8 : 6}
+						class="pip"
+						class:active={isReached(i)}
+						class:burn={i === 6 && isReached(i)}
+					/>
+					<!-- Step number -->
+					<text
+						x={pos.x}
+						y={pos.y}
+						class="step-num"
+						class:active={isReached(i)}
+					>
+						{String(i + 1).padStart(2, '0')}
+					</text>
+				{/each}
+			</svg>
+
+			<!-- Labels positioned over the SVG -->
+			<div class="labels">
+				{#each waypoints as wp, i}
+					<div
+						class="label"
+						class:active={isReached(i)}
+						class:burn={i === 6}
+						style="--lx: {positions[i].x}; --ly: {positions[i].y}"
+					>
+						<span class="wp-title">{wp.title}</span>
+						<span class="wp-desc">{wp.desc}</span>
 					</div>
-					<div class="step-content">
-						<div class="step-header">
-							<span class="step-num">{step.num}</span>
-							<h3>{step.title}</h3>
-						</div>
-						<p>{step.desc}</p>
-					</div>
-				</div>
-			{/each}
+				{/each}
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
 	.operation {
-		padding: 100px var(--pad);
+		padding: 48px var(--pad) 72px;
 	}
 
 	.inner {
@@ -72,13 +141,29 @@
 		margin: 0 auto;
 	}
 
+	.section-line {
+		width: 40px;
+		height: 1px;
+		background: var(--paper-border);
+		margin-bottom: 24px;
+	}
+
+	.exhibit {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.15em;
+		color: var(--stamp-red);
+		opacity: 0.6;
+		margin-bottom: 16px;
+	}
+
 	h2 {
 		font-family: var(--font-serif);
-		font-size: clamp(1.8rem, 4vw, 2.6rem);
-		color: var(--text-bright);
-		margin-bottom: 8px;
+		font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+		color: var(--ink);
+		margin-bottom: 32px;
 		opacity: 0;
-		transform: translateY(20px);
+		transform: translateY(12px);
 		transition: opacity 0.6s, transform 0.6s;
 	}
 
@@ -87,113 +172,150 @@
 		transform: translateY(0);
 	}
 
-	.lead {
-		font-size: 1.05rem;
-		color: var(--muted);
-		margin-bottom: 56px;
+	/* Map container */
+	.map {
+		position: relative;
 		opacity: 0;
-		transform: translateY(20px);
-		transition: opacity 0.6s 0.1s, transform 0.6s 0.1s;
+		transition: opacity 0.6s 0.2s;
 	}
 
-	.lead.visible {
+	.map.visible {
 		opacity: 1;
-		transform: translateY(0);
 	}
 
-	.timeline {
-		display: flex;
-		flex-direction: column;
-		gap: 0;
+	svg {
+		width: 100%;
+		height: auto;
+		display: block;
 	}
 
-	.step {
-		display: flex;
-		gap: 24px;
-		opacity: 0;
-		transform: translateX(-16px);
-		transition: opacity 0.4s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	/* Background path — the full route faintly visible */
+	.route-bg {
+		stroke: var(--paper-border);
+		stroke-width: 2;
+		stroke-dasharray: 6 4;
 	}
 
-	.step.active {
-		opacity: 1;
-		transform: translateX(0);
+	/* Animated path — draws on as you watch */
+	.route-line {
+		stroke: var(--ink-muted);
+		stroke-width: 2.5;
+		stroke-linecap: round;
+		transition: stroke-dashoffset 0.05s linear;
 	}
 
-	.step-line {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		flex-shrink: 0;
-		width: 40px;
+	/* Waypoint circles */
+	.pip {
+		fill: var(--paper);
+		stroke: var(--paper-border);
+		stroke-width: 2.5;
+		transition: fill 0.3s, stroke 0.3s;
 	}
 
-	.dot {
-		width: 40px;
-		height: 40px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 18px;
-		flex-shrink: 0;
+	.pip.active {
+		fill: var(--ink-muted);
+		stroke: var(--ink-muted);
 	}
 
-	.connector {
-		width: 1px;
-		flex: 1;
-		min-height: 20px;
-		background: var(--faint);
-		transition: background 0.5s;
+	.pip.burn {
+		fill: var(--stamp-red);
+		stroke: var(--stamp-red);
 	}
 
-	.burn-line {
-		background: linear-gradient(
-			to bottom,
-			var(--faint) 0%,
-			var(--red) 40%,
-			var(--amber) 70%,
-			transparent 100%
-		);
-	}
-
-	.step-content {
-		padding-bottom: 32px;
-	}
-
-	.step-header {
-		display: flex;
-		align-items: baseline;
-		gap: 10px;
-		margin-bottom: 4px;
-	}
-
+	/* Step numbers inside circles */
 	.step-num {
 		font-family: var(--font-mono);
-		font-size: 11px;
-		color: var(--muted);
-		letter-spacing: 0.05em;
-	}
-
-	h3 {
-		font-family: var(--font-sans);
-		font-size: 1rem;
+		font-size: 7px;
+		fill: transparent;
+		text-anchor: middle;
+		dominant-baseline: central;
 		font-weight: 600;
-		color: var(--text-bright);
+		transition: fill 0.3s;
 	}
 
-	.step.burn h3 {
-		color: var(--red);
+	.step-num.active {
+		fill: var(--paper);
 	}
 
-	.step-content p {
-		font-size: 14px;
-		color: var(--muted);
-		line-height: 1.5;
+	/* Labels overlay */
+	.labels {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
 	}
 
-	@media (max-width: 680px) {
-		.step {
-			gap: 16px;
+	.label {
+		position: absolute;
+		/* Convert SVG viewBox coords to percentages */
+		left: calc(var(--lx) / 620 * 100%);
+		top: calc(var(--ly) / 360 * 100%);
+		transform: translate(-50%, 18px);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		opacity: 0;
+		transition: opacity 0.4s;
+		width: 110px;
+	}
+
+	.label.active {
+		opacity: 1;
+	}
+
+	.wp-title {
+		font-family: var(--font-sans);
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--ink);
+		line-height: 1.3;
+	}
+
+	.label.burn .wp-title {
+		color: var(--stamp-red);
+	}
+
+	.wp-desc {
+		font-size: 10px;
+		color: var(--ink-muted);
+		line-height: 1.3;
+	}
+
+	/* Mobile: simplified vertical list */
+	@media (max-width: 600px) {
+		.map svg {
+			display: none;
+		}
+
+		.labels {
+			position: static;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.label {
+			position: static;
+			transform: none;
+			width: auto;
+			flex-direction: row;
+			align-items: center;
+			text-align: left;
+			gap: 12px;
+			padding: 12px 0 12px 24px;
+			border-left: 2px dashed var(--paper-border);
+			opacity: 1;
+		}
+
+		.label.active {
+			border-left-color: var(--ink-faint);
+		}
+
+		.label.burn {
+			border-left-color: var(--stamp-red);
+		}
+
+		.label:last-child {
+			border-left-color: transparent;
 		}
 	}
 </style>

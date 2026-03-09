@@ -7,16 +7,14 @@
 		</div>
 		<div class="right">
 			<a href="https://github.com/pbakaus/burn-after-login" target="_blank" rel="noopener">GitHub</a>
-			<a href="https://agentskills.io" target="_blank" rel="noopener">Agent Skills Spec</a>
-			<a href="https://gist.github.com/pbakaus/5483f00447725701fd46e1401477dd8c" target="_blank" rel="noopener">Original Gist</a>
 		</div>
 	</div>
 </footer>
 
 <style>
 	footer {
-		padding: 32px var(--pad);
-		border-top: 1px solid var(--border);
+		padding: 24px var(--pad);
+		border-top: 1px solid var(--paper-border);
 	}
 
 	.inner {
@@ -35,38 +33,38 @@
 
 	.wordmark {
 		font-family: var(--font-mono);
-		font-size: 13px;
-		color: var(--muted);
+		font-size: 12px;
+		color: var(--ink-muted);
 	}
 
 	.sep {
-		color: var(--faint);
+		color: var(--paper-border);
 	}
 
 	.license {
-		font-size: 13px;
-		color: var(--faint);
+		font-size: 12px;
+		color: var(--ink-faint);
 	}
 
 	.right {
 		display: flex;
-		gap: 20px;
+		gap: 16px;
 	}
 
 	.right a {
-		font-size: 13px;
-		color: var(--muted);
+		font-size: 12px;
+		color: var(--ink-muted);
 		text-decoration: none;
 	}
 
 	.right a:hover {
-		color: var(--text);
+		color: var(--ink);
 	}
 
 	@media (max-width: 600px) {
 		.inner {
 			flex-direction: column;
-			gap: 16px;
+			gap: 12px;
 		}
 	}
 </style>

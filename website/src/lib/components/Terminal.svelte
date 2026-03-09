@@ -56,23 +56,18 @@
 		let lineIndex = 0;
 		function showNext() {
 			if (lineIndex >= lines.length) {
-				// Loop after pause
 				setTimeout(playAnimation, 6000);
 				return;
 			}
 			currentLine = lineIndex + 1;
 			const line = lines[lineIndex];
 
-			// Trigger burn flash at countdown end
 			if (line.cls === 'removed' && !flashPhase) {
 				flashPhase = true;
 				burnPhase = true;
-				setTimeout(() => {
-					flashPhase = false;
-				}, 300);
+				setTimeout(() => { flashPhase = false; }, 300);
 			}
 
-			// Scroll to bottom
 			if (scrollContainer) {
 				requestAnimationFrame(() => {
 					scrollContainer.scrollTop = scrollContainer.scrollHeight;
@@ -103,6 +98,8 @@
 
 <section class="terminal-section" bind:this={el}>
 	<div class="inner">
+		<div class="section-line"></div>
+		<div class="exhibit">INTERCEPTED TRANSMISSION</div>
 		<h2>Field Test</h2>
 		<p class="lead">Watch the skill in action.</p>
 
@@ -118,8 +115,8 @@
 			<div class="terminal-body" bind:this={scrollContainer}>
 				<div class="flash" class:active={flashPhase}></div>
 				<div class="scanlines"></div>
-				{#each lines.slice(0, currentLine) as line, i}
-					<div class="line {line.cls}" style="animation-delay: {i * 0.02}s">
+				{#each lines.slice(0, currentLine) as line}
+					<div class="line {line.cls}">
 						{#if line.text === ''}
 							&nbsp;
 						{:else}
@@ -137,7 +134,7 @@
 
 <style>
 	.terminal-section {
-		padding: 80px var(--pad) 100px;
+		padding: 48px var(--pad) 72px;
 	}
 
 	.inner {
@@ -145,53 +142,69 @@
 		margin: 0 auto;
 	}
 
+	.section-line {
+		width: 40px;
+		height: 1px;
+		background: var(--paper-border);
+		margin-bottom: 24px;
+	}
+
+	.exhibit {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.15em;
+		color: var(--stamp-red);
+		opacity: 0.6;
+		margin-bottom: 16px;
+	}
+
 	h2 {
 		font-family: var(--font-serif);
-		font-size: clamp(1.8rem, 4vw, 2.6rem);
-		color: var(--text-bright);
+		font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+		color: var(--ink);
 		margin-bottom: 8px;
 	}
 
 	.lead {
-		font-size: 1.05rem;
-		color: var(--muted);
-		margin-bottom: 40px;
+		font-size: 1rem;
+		color: var(--ink-muted);
+		margin-bottom: 28px;
 	}
 
 	.terminal-window {
-		background: #13131a;
-		border-radius: 10px;
+		background: var(--terminal-bg);
+		border-radius: 8px;
 		overflow: hidden;
 		box-shadow:
-			0 8px 40px rgba(0, 0, 0, 0.4),
-			0 0 0 1px rgba(255, 255, 255, 0.05);
+			0 4px 20px rgba(0, 0, 0, 0.15),
+			0 0 0 1px rgba(0, 0, 0, 0.08);
 		transition: box-shadow 0.5s;
 	}
 
 	.terminal-window.burn {
 		box-shadow:
-			0 8px 40px rgba(0, 0, 0, 0.4),
-			0 0 0 1px rgba(255, 255, 255, 0.05),
-			0 0 60px rgba(220, 38, 38, 0.2);
+			0 4px 20px rgba(0, 0, 0, 0.15),
+			0 0 0 1px rgba(0, 0, 0, 0.08),
+			0 0 40px rgba(185, 28, 28, 0.15);
 	}
 
 	.title-bar {
 		display: flex;
 		align-items: center;
-		padding: 12px 16px;
+		padding: 10px 16px;
 		background: rgba(255, 255, 255, 0.03);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 	}
 
 	.dots {
 		display: flex;
-		gap: 7px;
+		gap: 6px;
 		margin-right: 16px;
 	}
 
 	.dots .dot {
-		width: 11px;
-		height: 11px;
+		width: 10px;
+		height: 10px;
 		border-radius: 50%;
 	}
 
@@ -201,18 +214,18 @@
 
 	.title {
 		font-family: var(--font-mono);
-		font-size: 12px;
-		color: var(--muted);
+		font-size: 11px;
+		color: var(--terminal-muted);
 	}
 
 	.terminal-body {
 		position: relative;
-		padding: 20px 24px;
-		min-height: 400px;
-		max-height: 480px;
+		padding: 16px 20px;
+		min-height: 360px;
+		max-height: 440px;
 		overflow-y: auto;
 		font-family: var(--font-mono);
-		font-size: 13px;
+		font-size: 12.5px;
 		line-height: 1.7;
 		scrollbar-width: none;
 	}
@@ -232,7 +245,7 @@
 	}
 
 	.flash.active {
-		opacity: 0.15;
+		opacity: 0.12;
 	}
 
 	.scanlines {
@@ -243,8 +256,8 @@
 			to bottom,
 			transparent 0px,
 			transparent 2px,
-			rgba(0, 0, 0, 0.05) 2px,
-			rgba(0, 0, 0, 0.05) 4px
+			rgba(0, 0, 0, 0.04) 2px,
+			rgba(0, 0, 0, 0.04) 4px
 		);
 		z-index: 5;
 	}
@@ -264,15 +277,15 @@
 	.cmd-y { color: #f5f5f5; }
 	.cyan { color: #78c8de; }
 	.ok { color: #7ee68a; }
-	.dim { color: #4a4a5a; }
+	.dim { color: var(--terminal-muted); }
 	.text { color: #a8a29e; }
 	.done { color: #7ee68a; font-weight: 700; }
-	.countdown { color: var(--amber); font-weight: 700; font-size: 14px; }
-	.removed { color: var(--red); }
-	.final { color: var(--amber); font-style: italic; }
+	.countdown { color: #f59e0b; font-weight: 700; font-size: 13px; }
+	.removed { color: #ef4444; }
+	.final { color: #f59e0b; font-style: italic; }
 
 	.cursor-block {
-		color: var(--amber);
+		color: #f59e0b;
 		animation: blockBlink 0.8s steps(1) infinite;
 	}
 
@@ -283,9 +296,9 @@
 
 	@media (max-width: 680px) {
 		.terminal-body {
-			padding: 16px;
+			padding: 14px;
 			font-size: 11px;
-			min-height: 340px;
+			min-height: 300px;
 		}
 	}
 </style>
