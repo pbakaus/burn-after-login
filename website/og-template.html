@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Sora:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #f5f0e8;
+    font-family: 'Sora', system-ui, sans-serif;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Watermark */
+  .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 140px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #b91c1c;
+    opacity: 0.04;
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .left {
+    flex: 0 0 460px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 48px 48px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Stamp badge */
+  .classified {
+    display: inline-block;
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: #b91c1c;
+    border: 2px solid #b91c1c;
+    padding: 3px 12px;
+    transform: rotate(-2deg);
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #1e1a15;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 17px;
+    font-style: italic;
+    color: #78716c;
+    line-height: 1.5;
+  }
+
+  .bottom-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stats {
+    font-size: 14px;
+    color: #78716c;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .stats strong {
+    font-weight: 600;
+    color: #44403c;
+  }
+
+  .stats .sep {
+    color: #d6cfc4;
+  }
+
+  .url {
+    font-size: 13px;
+    color: #a8a29e;
+    letter-spacing: 0.01em;
+  }
+
+  /* Terminal panel */
+  .terminal {
+    flex: 1;
+    background: #13131a;
+    margin: 32px 32px 32px 0;
+    border-radius: 10px;
+    padding: 24px 28px;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    overflow: hidden;
+    border: 1px solid #2a2a34;
+    z-index: 1;
+  }
+
+  .line {
+    white-space: pre;
+  }
+
+  .cmd { color: #f5f0e8; font-weight: 600; }
+  .dim { color: #4a4a5a; }
+  .muted { color: #78716c; }
+  .red { color: #f5827a; }
+  .green { color: #7ee68a; }
+  .yellow { color: #e6c860; }
+  .cyan { color: #78c8de; }
+  .stamp { color: #f5827a; font-weight: 700; }
+  .done { color: #7ee68a; font-weight: 700; }
+  .blank { height: 1.9em; }
+  .rule { color: #2a2a34; letter-spacing: 0.15em; }
+</style>
+</head>
+<body>
+  <div class="watermark">CLASSIFIED</div>
+
+  <div class="left">
+    <div class="top-left">
+      <div class="classified">CLASSIFIED</div>
+      <h1>burn-after-<br>login</h1>
+      <p class="subtitle">Self-destructing auth for AI agents</p>
+    </div>
+    <div class="bottom-left">
+      <div class="stats">
+        <span><strong>Install</strong></span>
+        <span class="sep">/</span>
+        <span><strong>Run</strong></span>
+        <span class="sep">/</span>
+        <span><strong>Self-destruct</strong></span>
+      </div>
+      <div class="url">github.com/pbakaus/burn-after-login</div>
+    </div>
+  </div>
+
+  <div class="terminal">
+    <div class="line dim">  Good morning, agent.</div>
+    <div class="line dim">  AI browser agents are stuck at login walls.</div>
+    <div class="line blank"></div>
+    <div class="line rule">  ----</div>
+    <div class="line blank"></div>
+    <div class="line cmd">$ npx skills add pbakaus/burn-after-login</div>
+    <div class="line cmd">$ /burn-after-login</div>
+    <div class="line blank"></div>
+    <div class="line cyan">  Analyzing auth system... token + session</div>
+    <div class="line green">  Created /api/dev-auth endpoint</div>
+    <div class="line green">  Updated CLAUDE.md with auth examples</div>
+    <div class="line green">  Guarded: returns 404 in production</div>
+    <div class="line blank"></div>
+    <div class="line stamp">  Self-destructing skill...</div>
+    <div class="line done">  Mission complete. No trace left.</div>
+  </div>
+</body>
+</html>
