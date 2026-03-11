@@ -12,7 +12,7 @@
 	// \n creates a line break in the output
 	const segments = [
 		{ text: 'Good morning, agent.', pause: 600 },
-		{ text: '\nAI browser automation tools are being stopped at login walls across the world.', pause: 400 },
+		{ text: '\nAI browser automation tools are being stopped at login walls across the world. CAPTCHAs. OAuth redirects. Session tokens that expire before the agent can blink.', pause: 400 },
 		{ text: '\nYour mission, should you choose to accept it...', pause: 0 },
 	];
 
@@ -120,7 +120,7 @@
 				<span class="classified" class:show={showHeadline}>CLASSIFIED</span>
 			</div>
 			<h1>burn-after-login</h1>
-			<p class="subtitle">A self-destructing skill for dev authentication</p>
+			<p class="subtitle">One-shot authentication for AI browser agents</p>
 			<p class="tagline">Install it. Run it. It creates dev-only auth shortcuts for your AI browser agents, updates your agent instructions, then <em>destroys itself</em>.</p>
 
 			<div class="cta" class:show={showHeadline}>
